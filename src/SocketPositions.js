@@ -3,24 +3,33 @@ import { Entity } from "resium";
 import { useSocket } from "./useSocket.js";
 import { Cartesian3 } from "cesium";
 
-Cartesian3.fromDegrees(-83.08, 42.31, 6000);
 
 export const SocketPositions = () => {
+  let emptyArray = [];
+  const [positions, setPositions] = useState([]);
   const socket = useSocket();
   const [socketData, setSocketData] = useState(null);
+
   const onMessage = useCallback((message) => {
     const data = JSON.parse(message.data);
     const {attributes, geometry} = data
     const CesiumEntity = {
       'name':attributes.assetSourceId,
-      'description':attributes,
+      'description':(`id: ${attributes.assetSourceId}`),
       'position': Cartesian3.fromDegrees(geometry.x, geometry.y, geometry.z),
       'point':'pixelSize: 1000000',
       'geometry': geometry
     };
-    console.log(geometry);
-    console.log(CesiumEntity);
+    
+    //console.log(CesiumEntity);
     setSocketData(CesiumEntity);
+    //submitHandler(CesiumEntity);
+    //console.log(positions);
+    setPositions(d => [...d, CesiumEntity]);
+    //setPositions(positions => positions.concat(CesiumEntity));
+    //setPositions(emptyArray => [...emptyArray, CesiumEntity]);
+    console.log(CesiumEntity.geometry);
+    //console.log(positions.length);
   }, []);
 
   useEffect(() => {
@@ -31,16 +40,20 @@ export const SocketPositions = () => {
     };
   }, [socket, onMessage]);
 
-  return (
+  return ( 
     <>
-    { socketData && (
-      <Entity 
-      name={socketData.name}
-      description={socketData.description}
-      position={Cartesian3.fromDegrees(socketData.geometry.x, socketData.geometry.y, socketData.geometry.z)}
-      point={{pixelSize: 10}}
-      />
-    )}  
+      { socketData && 
+        positions.map((d, i) => {  
+        return (   
+          <Entity 
+          name={d.name}
+          description={d.description}
+          position={Cartesian3.fromDegrees(((d.geometry.x/100)-82.34), ((d.geometry.y/100)+41.890), (d.geometry.z*.01))}
+          point={{pixelSize: 10}}
+          />
+        )
+      }) 
+      }  
     </>
   );
 };

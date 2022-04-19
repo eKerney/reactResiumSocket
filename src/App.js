@@ -30,7 +30,8 @@ function App() {
       method: 'get',
       url: 'https://airhub-api-dev.airspacelink.com/laanc/v1/ticket',
       headers: { 
-              }
+       
+      }
     };
     const fetchData = async () => {
       const result = await axios(config);
@@ -54,11 +55,41 @@ function App() {
         fullscreenButton={false}
         animation={false}  
     >
+          {/* <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_100_h3_11_worst.geojson"} 
+            onLoad={d => {d.entities.values.map(d => {
+              console.log(d._properties._dop_worst._value);
+              d.polygon.height = 1000;
+              d.polygon.extrudedHeight = 1200;
+              d.polygon.material = pdopColor[d._properties._dop_worst._value].withAlpha(0.8);
+            })
+            }}
+            stroke={Color.DARKCYAN}
+          /> */}
+         
+         {/* <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
+            onLoad={d => {d.entities.values.map(d => {
+              console.log(d._properties._dop_worst._value);
+              d.polygon.height = 200;
+              d.polygon.material = pdopColor[d._properties._dop_worst._value].withAlpha(0.5);
+              d.polygon.extrudedHeight = 400;
+            })
+            }}
+            // stroke={Color.AQUA}
+          /> */}
+          <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
+            onLoad={d => {d.entities.values.map(d => {
+              console.log(d._properties._dop_worst._value);
+              d.polygon.height = 200;
+              d.polygon.material = d._properties._dop_worst._value < 3 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                  pdopColor[d._properties._dop_worst._value].withAlpha(0.6);
+              d.polygon.extrudedHeight = 400;
+            })
+            }}
+            stroke={Color.GRAY.withAlpha(0.0)}
+          />
       {isLoaded ? <SocketProvider auth={getAuth}>
         {/* <LivePositions auth={getAuth}/> */}
       <SocketPositions></SocketPositions>
-      {/* {isLoaded ? <OpenSocket auth={getAuth} /> : console.log('NOT LOADED')} */}
-      {/* {isLoaded ? <LivePositions auth={getAuth} /> : console.log('NOT LOADED')} */}
       <Scene backgroundColor={Color.CORNFLOWERBLUE} />
       <Globe />
       <Camera 
