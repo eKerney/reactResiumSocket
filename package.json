@@ -4,10 +4,14 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.3",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@hot-loader/react-dom": "^16.14.0",
+    "@mui/material": "^5.6.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.26.1",
     "cesium": "^1.92.0",
     "craco-cesium": "^1.2.0",
     "craco-plugin-react-hot-reload": "^0.1.0",
@@ -15,6 +19,7 @@
     "react-dom": "^18.0.0",
     "react-hot-loader": "^4.13.0",
     "react-scripts": "5.0.0",
+    "react-use-websocket": "^3.0.0",
     "resium": "^1.14.3",
     "web-vitals": "^2.1.4"
   },

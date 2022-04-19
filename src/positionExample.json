@@ -1,0 +1,20 @@
+{
+    "attributes": {
+        "positionId": "57523967-0462-48be-b354-3a87f106bf3c",
+        "assetType": "aircraft-adsb",
+        "assetSource": "thales surveillance sdsp",
+        "assetSourceId": 2832,
+        "timestamp": "2022-04-19T13:40:50.343750",
+        "heading": null,
+        "speed": null,
+        "hexIndex": "8e2a146d66a430f"
+    },
+    "geometry": {
+        "x": -73.69131624698639,
+        "y": 41.414079666137695,
+        "spatialReference": {
+            "wkid": 4326
+        },
+        "z": 36200.0
+    }
+}
