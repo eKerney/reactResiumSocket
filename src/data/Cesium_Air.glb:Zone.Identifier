@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/CesiumGS/cesium/blob/main/Apps/SampleData/models/CesiumAir/Cesium_Air.glb
+HostUrl=https://raw.githubusercontent.com/CesiumGS/cesium/main/Apps/SampleData/models/CesiumAir/Cesium_Air.glb

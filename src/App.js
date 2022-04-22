@@ -1,17 +1,17 @@
-import { Color } from "cesium";
-import { hot } from "react-hot-loader/root";
-import * as Cesium from 'cesium';
+//import { Color } from "cesium";
+//import { hot } from "react-hot-loader/root";
+//import * as Cesium from 'cesium';
 import { useEffect, useState, useRef} from "react";
 import { Viewer, Entity, PointGraphics, EntityDescription, GeoJsonDataSource, Scene, Globe, Camera} from "resium";
-import { Cartesian3, createWorldTerrain, onLoadAction } from "cesium";
-import LivePositions from './live-positions';
-import OpenSocket from "./open-socket";
-import PositionProvider from "./positions";
+import { Cartesian3, Color } from "cesium";
+// import LivePositions from './live-positions';
+// import OpenSocket from "./open-socket";
+// import PositionProvider from "./positions";
 import axios from 'axios';
 import { SocketProvider } from "./SocketProvider";
 import { SocketPositions } from "./SocketPositions";
 
-Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMGY2Y2EwNy1lYjBjLTRlOTAtOTc4Yi01OGM4NTc5MTlhZWYiLCJpZCI6ODkzNTgsImlhdCI6MTY0OTcyNDM0OH0.d3owTfwWertUVKZyZ99sH-cWZJaPosgpJaotB5qmzJk';
+//Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMGY2Y2EwNy1lYjBjLTRlOTAtOTc4Yi01OGM4NTc5MTlhZWYiLCJpZCI6ODkzNTgsImlhdCI6MTY0OTcyNDM0OH0.d3owTfwWertUVKZyZ99sH-cWZJaPosgpJaotB5qmzJk';
 
 const cameraInit = Cartesian3.fromDegrees(-83.08, 42.31, 6000);
 
@@ -30,8 +30,7 @@ function App() {
       method: 'get',
       url: 'https://airhub-api-dev.airspacelink.com/laanc/v1/ticket',
       headers: { 
-       
-      }
+             }
     };
     const fetchData = async () => {
       const result = await axios(config);
@@ -66,27 +65,38 @@ function App() {
             stroke={Color.DARKCYAN}
           /> */}
          
-         {/* <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
+         {/* <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_005_h3_11_worst.geojson"} 
             onLoad={d => {d.entities.values.map(d => {
               console.log(d._properties._dop_worst._value);
-              d.polygon.height = 200;
-              d.polygon.material = pdopColor[d._properties._dop_worst._value].withAlpha(0.5);
-              d.polygon.extrudedHeight = 400;
+              d.polygon.height = 600;
+              d.polygon.material = d._properties._dop_worst._value < 4 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                  pdopColor[d._properties._dop_worst._value].withAlpha(0.4);
+              d.polygon.extrudedHeight = 800;
             })
             }}
-            // stroke={Color.AQUA}
+            stroke={Color.GRAY.withAlpha(0.0)}
           /> */}
           <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
             onLoad={d => {d.entities.values.map(d => {
               console.log(d._properties._dop_worst._value);
-              d.polygon.height = 200;
-              d.polygon.material = d._properties._dop_worst._value < 3 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
-                                  pdopColor[d._properties._dop_worst._value].withAlpha(0.6);
+              d.polygon.height = 100;
+              d.polygon.material = d._properties._dop_worst._value < 4 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                  pdopColor[d._properties._dop_worst._value].withAlpha(0.4);
               d.polygon.extrudedHeight = 400;
             })
             }}
             stroke={Color.GRAY.withAlpha(0.0)}
           />
+            {/* <GeoJsonDataSource data={"https://services5.arcgis.com/UDWrEU6HdWNYIRIV/ArcGIS/rest/services/buildingsClippedDet/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=-83.08%2C+42.28%2C+-83.02%2C+42.37&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="} 
+            onLoad={d => {d.entities.values.map(d => {
+              //console.log(d._properties._dop_worst._value);
+              d.polygon.material = Color.AQUA.withAlpha(0.0);
+              d.polygon.extrudedHeight = (d._properties.median_hgt * 5);
+            })
+            }}
+            stroke={Color.AQUA}
+          /> */}
+
       {isLoaded ? <SocketProvider auth={getAuth}>
         {/* <LivePositions auth={getAuth}/> */}
       <SocketPositions></SocketPositions>
