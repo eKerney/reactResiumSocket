@@ -1,98 +1,158 @@
 import * as React from 'react';
 import Slider from '@mui/material/Slider';
-import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import { FormControlLabel, FormGroup } from '@mui/material';
 import {useState, useEffect, useMemo, useCallback, useRef} from 'react';
-import * as ReactDOM from 'react-dom';
+import { Viewer, Entity, PointGraphics, EntityDescription, GeoJsonDataSource, Scene, Globe, Camera} from "resium";
+import { Cartesian3, Color } from "cesium";
 
 const prodURLyear = 'https://noaaflaskapi.herokuapp.com/year/', localURLyear = 'http://127.0.0.1:5000/year/';
 const localURLmonth = 'http://127.0.0.1:5000/month', prodURLmonth = 'https://noaaflaskapi.herokuapp.com/month';
 
 function ControlPanel(props) {
-  const marks = [
-    {value: 0, label: 'JAN'},
-    {value: 10, label: 'FEB'},
-    {value: 20, label: 'MAR'},
-    {value: 30, label: 'APR'},
-    {value: 40, label: 'MAY'},
-    {value: 50, label: 'JUN'},
-    {value: 60, label: 'JUL'},
-    {value: 70, label: 'AUG'},
-    {value: 80, label: 'SEP'},
-    {value: 90, label: 'OCT'},
-    {value: 100, label: 'NOV'},
-    {value: 110, label: 'DEC'},
-  ];
-  const [month, setMonth] = useState(null);
+ 
+  const [GPS003, setGPS003 ] = useState(false);
+  const [GPS050, setGPS050 ] = useState(false);
+  const [GPS100, setGPS100 ] = useState(false);
 
-  // const onChange = (e, v) => console.log(e, v);
-  // const OnChangeCommitted = (e, v) => {
-  //   //console.log(props);
-  //   //console.log(e, v);
-  //   };
+  const handleChange = (event) => {
+    console.log(event.target.name);
+    event.target.name == 'GPS003' ? setGPS003(!GPS003) : setGPS003(GPS003);
+    event.target.name == 'GPS050' ? setGPS050(!GPS050) : setGPS050(GPS050);
+    event.target.name == 'GPS100' ? setGPS100(!GPS100) : setGPS100(GPS100);
+    
+    
+  };
+  
+  const pdopColor = {
+    1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.GOLD, 6:Color.ORANGERED
+  };
 
-  const valueLabelFormat = (val) => `${(marks.find(m => m.value === val)).label}`;
-  useEffect(() => {
-    const panel = !month ? '' : document.getElementsByClassName('control-panel');
-    //  console.log(panel);
-    month && (console.log(month));
-  });
-
-  return !props.station ? 
+  return !GPS003 && !GPS050 && !GPS100 ? 
   // START PANEL NO SLIDER
   (
+    <>
     <div className="control-panel">
-      <h2>Operational Weather Suitability</h2>
-      <p>NOAA GHCN Stations Climate Normals</p>
-      <p>Click on a Station for Climate Chart - Data: <a href="https://www.ncdc.noaa.gov/cdo-web/" target="_blank" rel="noopener noreferrer">NOAA Climate Data</a></p>
+      <h2>AirHub Sphere</h2>
+      <p>Layers (***DRAFT***)</p>
       <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
       <br />
+      <FormGroup>
+        <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
+        <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
+        <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
+      </FormGroup>
     </div>
+    </>
   ) 
-  // END PANEL NO SLIDER
-    : 
-    props.station && month ? (
-    <div className="control-panel" style={{height: '1200px'}}>
-      <h2>Operational Weather Suitability</h2>
-      <p>NOAA GHCN Stations Climate Normals</p>
-      <p>Click on a Station for Climate Chart - Data: <a href="https://www.ncdc.noaa.gov/cdo-web/" target="_blank" rel="noopener noreferrer">NOAA Climate Data</a></p>
-      <hr style={{width: '800px', marginLeft: '-100px', marginBottom: '10px', marginTop: '26px'}}/>
-      <br />
-      <div style={{position: 'absolute'}}>
-        <iframe className='iframe-year' title='yearFrame' src={`${prodURLyear}${props.station}`} />
+    : GPS003 && !GPS050 && !GPS100 ? 
+    (
+    <>
+      <div className="control-panel">
+        <h2>AirHub Sphere</h2>
+        <p>Layers (***DRAFT***)</p>
+        <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+        <br />
+        <FormGroup>
+          <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
+          <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
+          <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
+        </FormGroup>
       </div>
-      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-       <hr style={{width: '800px', marginLeft: '-100px'}}/>
-       <p></p>
-        <Slider name='monthSlider' aria-label="Temperature" defaultValue={0} valueLabelDisplay="auto" step={10} marks={marks}
-          min={0} max={110} valueLabelFormat={valueLabelFormat} 
-          onChangeCommitted={(e, v) => setMonth({mon: `${(marks.find(m => m.value === v)).label}`, sta: props.station})}
-        />
-        <div style={{position: 'absolute'}}>
-          <iframe style={{overflow: 'hidden', padding: '0px', height: '2000px'}} className="frame-month" title='monthFrame' src={`${prodURLmonth}?station=${props.station}&month=${month.mon}`} />
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
+        onLoad={d => {d.entities.values.map(d => {
+          d.polygon.height = 0;
+          d.polygon.extrudedHeight = 30;
+          d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                               pdopColor[d._properties._dop_worst._value].withAlpha(0.4);        
+          })
+        }}
+        stroke={Color.GRAY.withAlpha(0.0)}
+      />
+    </>
+    ) 
+    : GPS003 && GPS050 && !GPS100 ? 
+    (
+      <>
+        <div className="control-panel">
+          <h2>AirHub Sphere</h2>
+          <p>Layers (***DRAFT***)</p>
+          <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+          <br />
+          <FormGroup>
+            <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
+            <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
+            <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
+          </FormGroup>
         </div>
-    </div>
-    ) :
-    // START PANEL WITH MONTH SLIDER
-    (     
-      <div className="control-panel" style={{height: '600px'}}>
-      <h2>Operational Weather Suitability</h2>
-      <p>NOAA GHCN Stations Climate Normals</p>
-      <p>Click on a Station for Climate Chart - Data: <a href="https://www.ncdc.noaa.gov/cdo-web/" target="_blank" rel="noopener noreferrer">NOAA Climate Data</a></p>
-      <hr style={{width: '800px', marginLeft: '-100px', marginBottom: '10px', marginTop: '26px'}}/>
-      <br />
-      <div style={{position: 'absolute'}}>
-        <iframe className='iframe-year' title='yearFrame' src={`${prodURLyear}${props.station}`} />
-      </div>
-      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-       <hr style={{width: '800px', marginLeft: '-100px'}}/>
-       <p></p>
-        <Slider name='monthSlider' aria-label="Temperature" defaultValue={0} valueLabelDisplay="auto" step={10} marks={marks}
-          min={0} max={110} valueLabelFormat={valueLabelFormat}
-          onChangeCommitted={(e, v) => setMonth({mon: `${(marks.find(m => m.value === v)).label}`, sta: props.station})}
+        <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
+          onLoad={d => {d.entities.values.map(d => {
+            d.polygon.height = 0;
+            d.polygon.extrudedHeight = 20;
+            d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.4);        
+            })
+          }}
+          stroke={Color.GRAY.withAlpha(0.0)}
         />
-    </div>
-    ); 
-    // END PANEL WITH MONTH SLIDER
+        <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_005_h3_11_worst.geojson"} 
+          onLoad={d => {d.entities.values.map(d => {
+            d.polygon.height = 50;
+            d.polygon.extrudedHeight = 70;
+            d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.4);        
+            })
+          }}
+          stroke={Color.GRAY.withAlpha(0.0)}
+        />
+      </>
+      ) 
+      : 
+    (
+      <>
+        <div className="control-panel">
+          <h2>AirHub Sphere</h2>
+          <p>Layers (***DRAFT***)</p>
+          <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+          <br />
+          <FormGroup>
+            <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
+            <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
+            <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
+          </FormGroup>
+        </div>
+        <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
+          onLoad={d => {d.entities.values.map(d => {
+            d.polygon.height = 0;
+            d.polygon.extrudedHeight = 20;
+            d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.3);        
+            })
+          }}
+          stroke={Color.GRAY.withAlpha(0.0)}
+        />
+        <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_005_h3_11_worst.geojson"} 
+          onLoad={d => {d.entities.values.map(d => {
+            d.polygon.height = 50;
+            d.polygon.extrudedHeight = 70;
+            d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.3);        
+            })
+          }}
+          stroke={Color.GRAY.withAlpha(0.0)}
+        />
+        <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_100_h3_11_worst.geojson"} 
+          onLoad={d => {d.entities.values.map(d => {
+            d.polygon.height = 100;
+            d.polygon.extrudedHeight = 130;
+            d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.3);        
+            })
+          }}
+          stroke={Color.GRAY.withAlpha(0.0)}
+        />
+      </>
+      ) 
     
 }
 
