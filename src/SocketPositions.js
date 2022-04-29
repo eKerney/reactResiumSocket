@@ -3,8 +3,6 @@ import { Entity, BillboardGraphics, Viewer } from "resium";
 import { useSocket } from "./useSocket.js";
 import { Cartesian3, Color, DistanceDisplayCondition } from "cesium";
 
-
-
 export const SocketPositions = () => {
   
   const socket = useSocket();

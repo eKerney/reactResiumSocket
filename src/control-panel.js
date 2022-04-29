@@ -33,10 +33,9 @@ function ControlPanel(props) {
   (
     <>
     <div className="control-panel">
-      <h2>AirHub Sphere</h2>
-      <p>Layers (***DRAFT***)</p>
-      <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
-      <br />
+    <h2>AIRHUB SPHERE <br/> **DRAFT**</h2>
+        <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+        <br />
       <FormGroup>
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
@@ -49,8 +48,7 @@ function ControlPanel(props) {
     (
     <>
       <div className="control-panel">
-        <h2>AirHub Sphere</h2>
-        <p>Layers (***DRAFT***)</p>
+      <h2>AIRHUB SPHERE <br/> **DRAFT**</h2>
         <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
         <br />
         <FormGroup>
@@ -64,7 +62,7 @@ function ControlPanel(props) {
           d.polygon.height = 0;
           d.polygon.extrudedHeight = 30;
           d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
-                               pdopColor[d._properties._dop_worst._value].withAlpha(0.4);        
+                               pdopColor[d._properties._dop_worst._value].withAlpha(0.3);        
           })
         }}
         stroke={Color.GRAY.withAlpha(0.0)}
@@ -75,10 +73,9 @@ function ControlPanel(props) {
     (
       <>
         <div className="control-panel">
-          <h2>AirHub Sphere</h2>
-          <p>Layers (***DRAFT***)</p>
-          <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
-          <br />
+        <h2>AIRHUB SPHERE <br/> **DRAFT**</h2>
+        <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+        <br />
           <FormGroup>
             <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
             <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
@@ -90,7 +87,7 @@ function ControlPanel(props) {
             d.polygon.height = 0;
             d.polygon.extrudedHeight = 20;
             d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
-                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.4);        
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.3);        
             })
           }}
           stroke={Color.GRAY.withAlpha(0.0)}
@@ -100,7 +97,7 @@ function ControlPanel(props) {
             d.polygon.height = 50;
             d.polygon.extrudedHeight = 70;
             d.polygon.material = d._properties._dop_worst._value < 1 ? pdopColor[d._properties._dop_worst._value].withAlpha(0.0) :
-                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.4);        
+                                 pdopColor[d._properties._dop_worst._value].withAlpha(0.3);        
             })
           }}
           stroke={Color.GRAY.withAlpha(0.0)}
@@ -111,10 +108,9 @@ function ControlPanel(props) {
     (
       <>
         <div className="control-panel">
-          <h2>AirHub Sphere</h2>
-          <p>Layers (***DRAFT***)</p>
-          <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
-          <br />
+        <h2>AIRHUB SPHERE <br/> **DRAFT**</h2>
+        <hr style={{width: '800px', marginLeft: '-100px', marginTop: '26px'}}/>
+        <br />
           <FormGroup>
             <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
             <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
