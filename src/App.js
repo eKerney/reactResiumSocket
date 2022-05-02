@@ -32,7 +32,7 @@ function App() {
       method: 'get',
       url: 'https://airhub-api-dev.airspacelink.com/laanc/v1/ticket',
       headers: { 
-              }
+           }
     };
     const fetchData = async () => {
       const result = await axios(config);

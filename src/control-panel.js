@@ -6,8 +6,6 @@ import {useState, useEffect, useMemo, useCallback, useRef} from 'react';
 import { Viewer, Entity, PointGraphics, EntityDescription, GeoJsonDataSource, Scene, Globe, Camera} from "resium";
 import { Cartesian3, Color } from "cesium";
 
-const prodURLyear = 'https://noaaflaskapi.herokuapp.com/year/', localURLyear = 'http://127.0.0.1:5000/year/';
-const localURLmonth = 'http://127.0.0.1:5000/month', prodURLmonth = 'https://noaaflaskapi.herokuapp.com/month';
 
 function ControlPanel(props) {
  
