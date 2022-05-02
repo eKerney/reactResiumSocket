@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
 import { FormControlLabel, FormGroup } from '@mui/material';
@@ -18,7 +18,6 @@ function ControlPanel(props) {
     event.target.name == 'GPS003' ? setGPS003(!GPS003) : setGPS003(GPS003);
     event.target.name == 'GPS050' ? setGPS050(!GPS050) : setGPS050(GPS050);
     event.target.name == 'GPS100' ? setGPS100(!GPS100) : setGPS100(GPS100);
-    
     
   };
   

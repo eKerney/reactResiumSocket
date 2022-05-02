@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 //import Slider from '@mui/material/Slider';
 import Checkbox from '@mui/material/Checkbox';
 import { FormControlLabel, FormGroup } from '@mui/material';
