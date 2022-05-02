@@ -62,7 +62,7 @@ export const SocketPositions = () => {
             name={d.name}
             description={d.description}
             position={Cartesian3.fromDegrees(((d.geometry.x/70)-82.02), ((d.geometry.y/70)+41.71), (d.geometry.z*.01))}>
-            <BillboardGraphics image={require("/home/pi/dev/node/react/resiumClone/reactResium/src/uav4.png")} scale={0.20}  />
+            <BillboardGraphics image={require("https://raw.githubusercontent.com/eKerney/reactResiumSocket/main/src/uav4.png")} scale={0.20}  />
           </Entity> 
         )
       }) 
