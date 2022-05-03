@@ -1,22 +1,27 @@
 //import { hot } from "react-hot-loader/root";
 import { useEffect, useState, useRef} from "react";
-import { Viewer, Entity, PointGraphics, EntityDescription, GeoJsonDataSource, Scene, Globe, Camera} from "resium";
-import { Cartesian3, Color } from "cesium";
+import { Viewer, Scene, Globe, Camera, CameraLookAt, CameraFlyTo} from "resium";
+import { Cartesian3, Color, Math, HeadingPitchRange } from "cesium";
 import axios from 'axios';
 import { SocketProvider } from "./SocketProvider";
 import { SocketPositions } from "./SocketPositions";
-import ControlPanel from './control-panel';
+import React from "react";
+
 import LayerControl from "./layer-control";
 
 //Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlMGY2Y2EwNy1lYjBjLTRlOTAtOTc4Yi01OGM4NTc5MTlhZWYiLCJpZCI6ODkzNTgsImlhdCI6MTY0OTcyNDM0OH0.d3owTfwWertUVKZyZ99sH-cWZJaPosgpJaotB5qmzJk';
 
-const cameraInit = Cartesian3.fromDegrees(-83.08, 42.31, 6000);
+const cameraStart = Cartesian3.fromDegrees(-83.08, 40.31, 60000);
+const cameraInit = Cartesian3.fromDegrees(-83.18, 42.35, 2000);
+const heading = Math.toRadians(100.0);
+const pitch = Math.toRadians(-20.0); 
+const range = 5000.0;
+const headPitchRange = new HeadingPitchRange(heading, pitch, range);
 
 function App() {  
   const pdopColor = {
     1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.GOLD, 6:Color.ORANGERED
   };
-
   const buildColor = {
     1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.GOLD, 6:Color.ORANGERED
   };
@@ -56,21 +61,18 @@ function App() {
         fullscreenButton={false}
         animation={false}  
     >
-           
+      <Camera position={cameraStart}>
+        <LayerControl />
 
-            {/* <ControlPanel  /> */}
-            <LayerControl />
-
-      {isLoaded ? <SocketProvider auth={getAuth}>
-      <SocketPositions></SocketPositions>
-      <Scene backgroundColor={Color.CORNFLOWERBLUE} />
-      <Globe />
-      <Camera 
-        position={cameraInit}
-        />
-    
-    
-      </SocketProvider> : <div>STILL WAITING...</div>}
+        {isLoaded ? <SocketProvider auth={getAuth}>
+        <SocketPositions></SocketPositions>
+        <Scene backgroundColor={Color.CORNFLOWERBLUE} />
+        <Globe />
+        </SocketProvider> : <div>STILL WAITING...</div>}
+      {/* </CameraLookAt> */}
+      {/* <CameraLookAt target={cameraInit} offset={headPitchRange}/> */}
+      </Camera>
+      <CameraFlyTo destination={cameraInit} orientation={headPitchRange}/>
     </Viewer> 
   
   );
