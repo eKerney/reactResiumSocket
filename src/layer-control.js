@@ -14,6 +14,8 @@ function LayerControl(props) {
   const [GPS050, setGPS050 ] = useState(false);
   const [GPS100, setGPS100 ] = useState(false);
   const [MDOTairTraffic, setMDOTairTraffic ] = useState(false);
+  const [testLayer, setTestLayer ] = useState(false);
+  const [GPSall, setGPSall ] = useState(false);
 
   const handleChange = (event) => {
     console.log(event.target.name);
@@ -23,13 +25,23 @@ function LayerControl(props) {
     event.target.name === 'GPS100' ? setGPS100(!GPS100) : setGPS100(GPS100);
     event.target.name === 'BUILDINGS' ? setBuildings(!buildings) : setBuildings(buildings);
     event.target.name === 'MDOT' ? setMDOTairTraffic(!MDOTairTraffic) : setMDOTairTraffic(MDOTairTraffic);
-    
+    event.target.name === 'TESTLAYER' ? setTestLayer(!testLayer) : setTestLayer(testLayer);
+    event.target.name === 'GPSALL' ? setGPSall(!GPSall) : setGPSall(GPSall);
   };
   
   const pdopColor = {
-    1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.GOLD, 6:Color.ORANGERED
+    1:Color.GREEN, 2:Color.CHARTREUSE, 3:Color.GREENYELLOW, 4:Color.YELLOW, 5:Color.DARKORANGE, 6:Color.RED
   };
-
+  const pdopColAll = {
+    1:Color.GREEN.withAlpha(0.1), 2:Color.CHARTREUSE.withAlpha(0.2), 3:Color.GREENYELLOW.withAlpha(0.3), 
+    4:Color.YELLOW.withAlpha(0.3), 5:Color.DARKORANGE.withAlpha(0.3), 6:Color.RED.withAlpha(0.3),
+    '-99999':Color.BLACK.withAlpha(0.5)
+  };
+  const pdopColBad = {
+    1:Color.GREEN.withAlpha(0.0), 2:Color.CHARTREUSE.withAlpha(0.2), 3:Color.GREENYELLOW.withAlpha(0.3), 
+    4:Color.YELLOW.withAlpha(0.3), 5:Color.DARKORANGE.withAlpha(0.3), 6:Color.RED.withAlpha(0.3),
+    '-99999':Color.GREY.withAlpha(0.3)
+  };
   return  (
   <>
     <div className="control-panel">
@@ -42,18 +54,34 @@ function LayerControl(props) {
         <FormControlLabel control={<Checkbox name='GPS003' checked={GPS003} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 3 meters" />
         <FormControlLabel control={<Checkbox name='GPS050' checked={GPS050} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 50 meters " />
         <FormControlLabel control={<Checkbox name='GPS100' checked={GPS100} color="secondary" onChange={handleChange}/>} label="GPS Signal Strength 100 meters " />
+        <FormControlLabel control={<Checkbox name='TESTLAYER' checked={testLayer} color="secondary" onChange={handleChange}/>} label="MDOT AIR SELECTION" />
+        <FormControlLabel control={<Checkbox name='GPSALL' checked={GPSall} color="secondary" onChange={handleChange}/>} label="GPS ALL" />
       </FormGroup>
     </div>
-    { MDOTairTraffic &&
-       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResiumSocket/main/src/data/MDOTairDensity.geojson"} 
+    { testLayer &&
+       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore/main/mdotDensitySelection.geojson"} 
        onLoad={d => {d.entities.values.forEach(d => {
-          //d.polygon.material = new Color(.5,.5,.5, 0.5)
           const h = (d._properties.level)*.3048;
           const den = d._properties.density;
           d.polygon.height = (h) - 100
           d.polygon.extrudedHeight = (h) + 100;
         //  d.polygon.material = h > (10000) ? Color.LAVENDER.withAlpha(0.2) : h > (5000) ? Color.LIGHTSTEELBLUE.withAlpha(0.2) : h > (3000) ? Color.PLUM.withAlpha(0.2) : 
         //  h > (1000) ? Color.MEDIUMPURPLE.withAlpha(0.1) : h > (500) ? Color.BLUEVIOLET.withAlpha(0.2) : Color.DARKMAGENTA.withAlpha(0.3); 
+        d.polygon.material = den > (20) ? Color.DARKMAGENTA.withAlpha(0.4) : den > (10) ? Color.BLUEVIOLET.withAlpha(0.4) : 
+        den > (5) ? Color.MEDIUMPURPLE.withAlpha(0.3) : den > (1) ? Color.PLUM.withAlpha(0.15) : den > (.5) ? 
+        Color.LIGHTSTEELBLUE.withAlpha(0.1) : Color.LAVENDER.withAlpha(0.1); 
+       })
+       }}  
+       stroke={Color.AQUA.withAlpha(0.0)}
+     />
+    }
+    { MDOTairTraffic &&
+       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResiumSocket/main/src/data/MDOTairDensity.geojson"} 
+       onLoad={d => {d.entities.values.forEach(d => {
+          const h = (d._properties.level)*.3048;
+          const den = d._properties.density;
+          d.polygon.height = (h) - 100
+          d.polygon.extrudedHeight = (h) + 100;
         d.polygon.material = den > (20) ? Color.DARKMAGENTA.withAlpha(0.3) : den > (10) ? Color.BLUEVIOLET.withAlpha(0.2) : den > (5) ? Color.MEDIUMPURPLE.withAlpha(0.1) : 
         den > (1) ? Color.PLUM.withAlpha(0.2) : den > (.5) ? Color.LIGHTSTEELBLUE.withAlpha(0.2) : Color.LAVENDER.withAlpha(0.2); 
        })
@@ -72,6 +100,23 @@ function LayerControl(props) {
        }}
        stroke={Color.AQUA.withAlpha(0.0)}
      />
+    }
+    { GPSall && 
+      <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/dataStore/main/spirent_gps_202204.geojson"} 
+          onLoad={d => {d.entities.values.forEach(d => {
+            d.polygon.height = 0;
+            d.polygon.extrudedHeight = 50;
+            //d.polygon.material = Color.GRAY.withAlpha(0.5)
+            console.log(d._properties._dop_worst_agl003_202204._value);
+            d.polygon.material = d._properties._dop_worst_agl003_202204._value < 1 ?
+                                  pdopColBad[d._properties._dop_worst_agl003_202204._value] :
+                                  pdopColBad[d._properties._dop_worst_agl003_202204._value] ;
+                                  
+                      
+            })
+          }}
+          stroke={Color.GRAY.withAlpha(0.0)}
+      /> 
     }
     { GPS003 && 
       <GeoJsonDataSource data={"https://raw.githubusercontent.com/eKerney/reactResium/main/src/data/agl_003_h3_11_worst.geojson"} 
